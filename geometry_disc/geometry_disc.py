@@ -5,12 +5,12 @@ import numpy as np
 # -------------------------------------------------------------------
 # This function has as inputs 
 
-def disc_geometry():
+def disc_geometry(curve_1):
     
     pass
 
 if __name__=="__main__":
 
-    disc_geometry()
+    disc_geometry(2)
     
 
