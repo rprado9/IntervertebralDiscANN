@@ -1,6 +1,9 @@
 import numpy as np
 
 from copy import deepcopy
+from Grante.CuboidGmsh.solids import cuboid_prisms as prisms
+from Grante.CuboidGmsh.tool_box import meshing_tools as tools
+
 
 # |----------------------------------------------------------------------|
 # |  This code aims to approach the mapping points of the disc geometry, |
@@ -14,6 +17,62 @@ from copy import deepcopy
 # nulus (external) bottom curve of the disc.
 
 def disc_geometry(curve_1, curve_2, curve_3, curve_4, n_points):
+
+    surfaces_regions_names = ["bottom", "top", "lateral"]
+
+    volumes_regions_names = ["nucleus", "annulus"]
+
+    geometric_data = tools.gmsh_initialization(surface_regionsNames = 
+    surfaces_regions_names, volume_regionsNames = volumes_regions_names)
+
+    # Defines the eight point of the top square corners
+
+    def square_top_curve(theta):
+
+        # function_square_theta returns the coordinates of the each corner 
+        # points [x, y, z]. In this case is valid to parametrize the func-
+        # tion to the theta parameter.
+
+        r = 1
+
+        # z is the high of the disc.
+
+        z = 1
+
+        function_square_theta = [r*np.cos(2*np.pi*theta), r*np.sin(2*np.pi*theta), z]
+
+        coordinates_point = function_square_theta
+
+        return coordinates_point
+    
+    def square_bottom_curve(theta):
+
+        # function_square_theta returns the coordinates of the each corner 
+        # points [x, y, z]. In this case is valid to parametrize the func-
+        # tion to the theta parameter.
+
+        r = 1
+
+        z = 0
+
+        function_square_theta = [r*np.cos(2*np.pi*theta), r*np.sin(2*np.pi*theta), 0]
+
+        coordinates_point = function_square_theta
+
+        return coordinates_point
+    
+    parametric_curves = {"square top": square_top_curve, "square bottom": square_bottom_curve}
+
+    corner_points = [["square bottom", 0.125], ["square bottom", 0.375], ["square bottom", 0.625], ["square bottom", 0.875],
+                     ["square top", 0.125], ["square top", 0.375], ["square top", 0.625], ["square top", 0.875]]
+
+    geometric_data = prisms.hexahedron_from_corners(corner_points, transfinite_directions = [10, 10, 10], 
+                                                    geometric_data = geometric_data, 
+                                                    parametric_curves = parametric_curves,
+                                                    explicit_volume_physical_group_name = "nucleus", 
+                                                    explicit_surface_physical_group_name = {1: "bottom", 6: "top"})
+    
+    tools.gmsh_finalize(geometric_data = geometric_data, file_name = "intervertebral_disc_mesh")
 
     # delta_tetha is the distance between the points of the curve
 
@@ -92,6 +151,18 @@ def disc_geometry(curve_1, curve_2, curve_3, curve_4, n_points):
 
         print("")
 
+    # Test square points:
+
+    theta_list = [0.125, 0.375, 0.625, 0.875]
+
+    for theta in theta_list:
+       
+       print(f"Coordinate point of the top square:{square_top_curve(theta)}")
+
+    for theta in theta_list:
+
+        print(f"Coordinate point of the bottom square:{square_bottom_curve(theta)}")
+
 if __name__=="__main__":
 
     # r is the small radius of the disc (is an important parameter to describe
@@ -129,6 +200,5 @@ if __name__=="__main__":
 
         return [R*np.sin(2*np.pi*tetha_value), R*np.cos(2*np.pi*tetha_value), 0.0]
     
-    disc_geometry(function_curve_1, function_curve_2, function_curve_3, function_curve_4, n_points)
-    
-    
+    disc_geometry(function_curve_1, function_curve_2, function_curve_3, function_curve_4,
+    n_points)
