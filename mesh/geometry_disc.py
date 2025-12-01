@@ -21,14 +21,20 @@ def disc_geometry(top_internal, top_external, bottom_internal, bottom_external, 
 
     print(len(bottom_internal[0]))
 
+    # Names the parts of the disc to show in gmsh in tools -> visibility -> ...
+
     surfaces_regions_names = ["bottom", "top", "lateral"]
 
     volumes_regions_names = ["nucleus", "annulus"]
+
+    # Calls the class (library)
 
     geometric_data = tools.gmsh_initialization(surface_regionsNames = 
     surfaces_regions_names, volume_regionsNames = volumes_regions_names)
 
     print(len(bottom_internal[0]))
+
+    # Starts to do the splines of the geometry
     
     top_internal_curve = spline_3D_interpolation(points_array = top_internal, add_initial_point_as_end_point=True)
 
@@ -54,6 +60,8 @@ def disc_geometry(top_internal, top_external, bottom_internal, bottom_external, 
                          "top internal":top_internal_curve, "top external": top_external_curve, 
                          "bottom internal": bottom_internal_curve, "bottom external": bottom_external_curve}
     
+    # Defines witch angle there are the flares lines
+    
     theta_1 = 0.0
 
     theta_2 = 0.25
@@ -68,6 +76,8 @@ def disc_geometry(top_internal, top_external, bottom_internal, bottom_external, 
     # *                        internal curve setup    (nucleus)            *                                                   
     # ***********************************************************************
 
+    # Defines the setup of the cube (squares) to do the central cuboid
+
     corner_points = [["square bottom", theta_1], ["square bottom", theta_2], ["square bottom", theta_3], ["square bottom", theta_4],
                      ["square top", theta_1], ["square top", theta_2], ["square top", theta_3], ["square top", theta_4]]
 
@@ -76,6 +86,8 @@ def disc_geometry(top_internal, top_external, bottom_internal, bottom_external, 
                                                     parametric_curves = parametric_curves,
                                                     explicit_volume_physical_group_name = "nucleus", 
                                                     explicit_surface_physical_group_name = {1: "bottom", 6: "top"})
+    
+    # Defines the setup of the first cuboid of the nucleus
     
     corner_points = [["bottom internal", theta_1], ["bottom internal", theta_2], ["square bottom", theta_2], ["square bottom", theta_1],
                      ["top internal", theta_1], ["top internal", theta_2], ["square top", theta_2], ["square top", theta_1]]
@@ -88,6 +100,8 @@ def disc_geometry(top_internal, top_external, bottom_internal, bottom_external, 
                                                     edges_points = {1: ["bottom internal", theta_1, theta_2, n_points], 
                                                     5: ["top internal", theta_1, theta_2, n_points]})
     
+    # Defines the setup of the second cuboid of the nucleus
+    
     corner_points = [["bottom internal", theta_2], ["bottom internal", theta_3], ["square bottom", theta_3], ["square bottom", theta_2],
                      ["top internal", theta_2], ["top internal", theta_3], ["square top", theta_3], ["square top", theta_2]]
 
@@ -99,6 +113,8 @@ def disc_geometry(top_internal, top_external, bottom_internal, bottom_external, 
                                                     edges_points = {1: ["bottom internal", theta_2, theta_3, n_points], 
                                                     5: ["top internal", theta_2, theta_3, n_points]})
     
+    # Defines the setup of the third cuboid of the nucleus
+    
     corner_points = [["bottom internal", theta_3], ["bottom internal", theta_4], ["square bottom", theta_4], ["square bottom", theta_3],
                      ["top internal", theta_3], ["top internal", theta_4], ["square top", theta_4], ["square top", theta_3]]
 
@@ -109,6 +125,8 @@ def disc_geometry(top_internal, top_external, bottom_internal, bottom_external, 
                                                     explicit_surface_physical_group_name = {1: "bottom", 6: "top"},
                                                     edges_points = {1: ["bottom internal", theta_3, theta_4, n_points], 
                                                     5: ["top internal", theta_3, theta_4, n_points]})
+    
+    # Defines the setup of the fourth cuboid of the nucleus
     
     corner_points = [["bottom internal", theta_4], ["bottom internal", theta_5], ["square bottom", theta_5], ["square bottom", theta_4],
                      ["top internal", theta_4], ["top internal", theta_5], ["square top", theta_5], ["square top", theta_4]]
@@ -125,6 +143,8 @@ def disc_geometry(top_internal, top_external, bottom_internal, bottom_external, 
     # *                        external curve setup   (annulus)             *                                                   
     # ***********************************************************************
 
+    # Defines the setup of the first cuboid of the annulus 
+
     corner_points = [["bottom external", theta_1], ["bottom external", theta_2], ["bottom internal", theta_2], ["bottom internal", theta_1],
                      ["top external", theta_1], ["top external", theta_2], ["top internal", theta_2], ["top internal", theta_1]]
 
@@ -135,6 +155,8 @@ def disc_geometry(top_internal, top_external, bottom_internal, bottom_external, 
                                                     explicit_surface_physical_group_name = {1: "bottom", 6: "top"},
                                                     edges_points = {1: ["bottom external", theta_1, theta_2, n_points], 
                                                     5: ["top external", theta_1, theta_2, n_points]})
+    
+    # Defines the setup of the second cuboid of the annulus 
     
     corner_points = [["bottom external", theta_2], ["bottom external", theta_3], ["bottom internal", theta_3], ["bottom internal", theta_2],
                      ["top external", theta_2], ["top external", theta_3], ["top internal", theta_3], ["top internal", theta_2]]
@@ -147,6 +169,8 @@ def disc_geometry(top_internal, top_external, bottom_internal, bottom_external, 
                                                     edges_points = {1: ["bottom external", theta_2, theta_3, n_points], 
                                                     5: ["top external", theta_2, theta_3, n_points]})
     
+    # Defines the setup of the third cuboid of the annulus 
+    
     corner_points = [["bottom external", theta_3], ["bottom external", theta_4], ["bottom internal", theta_4], ["bottom internal", theta_3],
                      ["top external", theta_3], ["top external", theta_4], ["top internal", theta_4], ["top internal", theta_3]]
 
@@ -158,6 +182,8 @@ def disc_geometry(top_internal, top_external, bottom_internal, bottom_external, 
                                                     edges_points = {1: ["bottom external", theta_3, theta_4, n_points], 
                                                     5: ["top external", theta_3, theta_4, n_points]})
     
+    # Defines the setup of the fourth cuboid of the annulus 
+    
     corner_points = [["bottom external", theta_4], ["bottom external", theta_5], ["bottom internal", theta_5], ["bottom internal", theta_4],
                      ["top external", theta_4], ["top external", theta_5], ["top internal", theta_5], ["top internal", theta_4]]
 
@@ -168,6 +194,8 @@ def disc_geometry(top_internal, top_external, bottom_internal, bottom_external, 
                                                     explicit_surface_physical_group_name = {1: "bottom", 6: "top"},
                                                     edges_points = {1: ["bottom external", theta_4, theta_5, n_points], 
                                                     5: ["top external", theta_4, theta_5, n_points]})
+    
+    # Calls the function to generate the mesh 
     
     tools.gmsh_finalize(geometric_data = geometric_data, file_name = "intervertebral_disc_mesh")
 
@@ -427,6 +455,8 @@ if __name__=="__main__":
     print(len(bottom_internal[2]))
 
     bottom_external = [deepcopy(x_top_external), deepcopy(y_top_external), [0.0 for i in range(len(x_top_external))]]
+
+    # Finally, Calls the principal function to parametrize the disc geometry
 
     disc_geometry(top_internal, top_external, bottom_internal, bottom_external, 15)
 
