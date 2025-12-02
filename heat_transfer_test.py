@@ -11,7 +11,9 @@ from dolfin import *
 
 polynomial_degree = 1
 
-# Defines the lenght of the edges (in his case: a cube)
+# Defines the lenght of the edges (in his case: parameters fo the exeercise 2.12 
+# of the 7th ed. Heat and Mass Transfer Incropera
+
 
 L = 0.1
 W = 1.0
