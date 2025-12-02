@@ -125,10 +125,3 @@ xdmf_file.write(T_solve, 0.0)
 xdmf_file.write(flux_solve, 0.0)
 
 xdmf_file.close()
-
-
-
-
-
-
-
