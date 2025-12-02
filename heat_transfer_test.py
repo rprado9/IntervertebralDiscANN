@@ -112,6 +112,8 @@ W = VectorFunctionSpace(mesh, 'P', polynomial_degree)
 
 flux_equation = -1.0 * k_tensor * grad(T_solve)
 
+# cg is a iterative method
+
 flux_solve = project(flux_equation, W, solver_type="cg")
 flux_solve.rename("Heat Flux", "Heat Flux Vector")
 
